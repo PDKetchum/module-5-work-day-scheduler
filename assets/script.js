@@ -8,19 +8,20 @@ function displayDate() {
 
 displayDate();
 
-var businessHours = [
-  { id: "9AM", time: moment("09", "HH") },
-  { id: "10AM", time: moment("10", "HH") },
-  { id: "11AM", time: moment("11", "HH") },
-  { id: "12PM", time: moment("12", "HH") },
-  { id: "1PM", time: moment("13", "HH") },
-  { id: "2PM", time: moment("14", "HH") },
-  { id: "3PM", time: moment("15", "HH") },
-  { id: "4PM", time: moment("16", "HH") },
-  { id: "5PM", time: moment("17", "HH") },
-];
+var date = moment().format("YYYY-DD-MM");
 
-console.log(businessHours);
+var businessHours = [
+  { id: "9AM", time: moment(date + " 09") },
+  { id: "10AM", time: moment(date + " 10") },
+  { id: "11AM", time: moment(date + " 11") },
+  { id: "12PM", time: moment(date + " 12") },
+  { id: "1PM", time: moment(date + " 13") },
+  { id: "2PM", time: moment(date + " 14") },
+  { id: "3PM", time: moment(date + " 15") },
+  { id: "4PM", time: moment(date + " 16") },
+  { id: "5PM", time: moment(date + " 17") },
+  { id: "6PM", time: moment(date + " 18") },
+];
 
 function printTimeblocks() {
   for (var i = 0; i < businessHours.length; i++) {
@@ -62,8 +63,9 @@ function printTimeblocks() {
 
     $saveButton.on("click", saveAppointment);
 
-    getSavedAppointments();
-    currentTimeblock();
+    var businessTime = businessHours[i].time;
+
+    styleTimeBlock(businessTime, $appointmentText);
   }
 }
 
@@ -80,8 +82,6 @@ function saveAppointment(event) {
 
   var $appointmentText = $(`#${appointmentId}`);
 
-  console.log($appointmentText);
-
   var savedAppointment = $appointmentText.val();
   localStorage.setItem(businessHours[buttonId].id, savedAppointment);
 }
@@ -90,20 +90,14 @@ function getSavedAppointments(key) {
   return localStorage.getItem(key);
 }
 
-function currentTimeblock() {
-  var currentTime = moment().format("HH");
+function styleTimeBlock(businessTime, $appointmentText) {
+  var currentTime = moment();
 
-  for (var i = 0; i < businessHours.length; i++) {
-    var appointmentId = businessHours[i].id;
-
-    var $appointmentText = $(`#${appointmentId}`);
-
-    if (currentTime === businessHours[i].time) {
-      $appointmentText.attr("class", "present");
-    } else if (currentTime < businessHours[i].time) {
-      $appointmentText.attr("class", "past");
-    } else if (currentTime > businessHours[i].time) {
-      $appointmentText.attr("class", "future");
-    }
+  if (businessTime.isBefore(currentTime, "hour")) {
+    $appointmentText.attr("class", "past");
+  } else if (businessTime.isAfter(currentTime, "hour")) {
+    $appointmentText.attr("class", "future");
+  } else {
+    $appointmentText.attr("class", "present");
   }
 }
