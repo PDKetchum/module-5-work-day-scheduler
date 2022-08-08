@@ -34,11 +34,11 @@ function printTimeblocks() {
 
     var $appointmentEl = $("<td>");
 
-    $appointmentEl.text("");
-
     var $appointmentText = $("<textarea>");
 
     $appointmentText.attr("id", businessHours[i]);
+
+    $appointmentText.text(getSavedAppointments(businessHours[i]));
 
     var $save = $("<td>");
 
@@ -59,6 +59,8 @@ function printTimeblocks() {
     $timeBlock.append($timeblockRow);
 
     $saveButton.on("click", saveAppointment);
+
+    getSavedAppointments();
   }
 }
 
@@ -70,4 +72,22 @@ function saveAppointment(event) {
   var buttonClicked = event.target;
 
   var buttonId = buttonClicked.id;
+
+  var appointmentId = businessHours[buttonId];
+
+  var $appointmentText = $(`#${appointmentId}`);
+
+  console.log($appointmentText);
+
+  var savedAppointment = $appointmentText.val();
+  localStorage.setItem(businessHours[buttonId], savedAppointment);
+}
+
+function getSavedAppointments(key) {
+  return localStorage.getItem(key);
+}
+
+function currentTimeblock() {
+ var currentTime = moment().format("h")
+ if ()
 }
