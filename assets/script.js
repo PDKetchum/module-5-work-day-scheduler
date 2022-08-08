@@ -9,16 +9,18 @@ function displayDate() {
 displayDate();
 
 var businessHours = [
-  "9AM",
-  "10AM",
-  "11AM",
-  "12PM",
-  "1PM",
-  "2PM",
-  "3PM",
-  "4PM",
-  "5PM",
+  { id: "9AM", time: moment("09", "HH") },
+  { id: "10AM", time: moment("10", "HH") },
+  { id: "11AM", time: moment("11", "HH") },
+  { id: "12PM", time: moment("12", "HH") },
+  { id: "1PM", time: moment("13", "HH") },
+  { id: "2PM", time: moment("14", "HH") },
+  { id: "3PM", time: moment("15", "HH") },
+  { id: "4PM", time: moment("16", "HH") },
+  { id: "5PM", time: moment("17", "HH") },
 ];
+
+console.log(businessHours);
 
 function printTimeblocks() {
   for (var i = 0; i < businessHours.length; i++) {
@@ -28,7 +30,7 @@ function printTimeblocks() {
 
     var $appointmentTime = $("<th>");
 
-    $appointmentTime.text(businessHours[i]);
+    $appointmentTime.text(businessHours[i].id);
 
     $appointmentTime.attr("class", "hour");
 
@@ -36,9 +38,9 @@ function printTimeblocks() {
 
     var $appointmentText = $("<textarea>");
 
-    $appointmentText.attr("id", businessHours[i]);
+    $appointmentText.attr("id", businessHours[i].id);
 
-    $appointmentText.text(getSavedAppointments(businessHours[i]));
+    $appointmentText.text(getSavedAppointments(businessHours[i].id));
 
     var $save = $("<td>");
 
@@ -61,6 +63,7 @@ function printTimeblocks() {
     $saveButton.on("click", saveAppointment);
 
     getSavedAppointments();
+    currentTimeblock();
   }
 }
 
@@ -73,14 +76,14 @@ function saveAppointment(event) {
 
   var buttonId = buttonClicked.id;
 
-  var appointmentId = businessHours[buttonId];
+  var appointmentId = businessHours[buttonId].id;
 
   var $appointmentText = $(`#${appointmentId}`);
 
   console.log($appointmentText);
 
   var savedAppointment = $appointmentText.val();
-  localStorage.setItem(businessHours[buttonId], savedAppointment);
+  localStorage.setItem(businessHours[buttonId].id, savedAppointment);
 }
 
 function getSavedAppointments(key) {
@@ -88,6 +91,19 @@ function getSavedAppointments(key) {
 }
 
 function currentTimeblock() {
- var currentTime = moment().format("h")
- if ()
+  var currentTime = moment().format("HH");
+
+  for (var i = 0; i < businessHours.length; i++) {
+    var appointmentId = businessHours[i].id;
+
+    var $appointmentText = $(`#${appointmentId}`);
+
+    if (currentTime === businessHours[i].time) {
+      $appointmentText.attr("class", "present");
+    } else if (currentTime < businessHours[i].time) {
+      $appointmentText.attr("class", "past");
+    } else if (currentTime > businessHours[i].time) {
+      $appointmentText.attr("class", "future");
+    }
+  }
 }
