@@ -19,13 +19,18 @@ var businessHours = [
   "4PM",
   "5PM",
 ];
+
 function printTimeblocks() {
   for (var i = 0; i < businessHours.length; i++) {
     var $timeblockRow = $("<tr>");
 
+    $timeblockRow.attr("class", "");
+
     var $appointmentTime = $("<th>");
 
     $appointmentTime.text(businessHours[i]);
+
+    $appointmentTime.attr("class", "hour");
 
     var $appointmentEl = $("<td>");
 
@@ -39,6 +44,10 @@ function printTimeblocks() {
 
     var $saveButton = $("<button>");
 
+    $saveButton.attr("class", "saveBtn");
+
+    $saveButton.attr("id", i);
+
     $saveButton.text("Save");
 
     $appointmentEl.append($appointmentText);
@@ -48,7 +57,17 @@ function printTimeblocks() {
     $timeblockRow.append($appointmentTime, $appointmentEl, $save);
 
     $timeBlock.append($timeblockRow);
+
+    $saveButton.on("click", saveAppointment);
   }
 }
 
 printTimeblocks();
+
+function saveAppointment(event) {
+  event.preventDefault();
+
+  var buttonClicked = event.target;
+
+  var buttonId = buttonClicked.id;
+}
