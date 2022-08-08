@@ -1,6 +1,7 @@
 var $today = $("#currentDay");
 var $timeBlock = $("#body");
 
+// Grabs current date with moment.js and prints to HTML
 function displayDate() {
   var date = moment().format("dddd MMMM Do, YYYY");
   $today.text(date);
@@ -10,6 +11,7 @@ displayDate();
 
 var date = moment().format("YYYY-DD-MM");
 
+// Business hours to list on page
 var businessHours = [
   { id: "9AM", time: moment(date + " 09") },
   { id: "10AM", time: moment(date + " 10") },
@@ -23,54 +25,45 @@ var businessHours = [
   { id: "6PM", time: moment(date + " 18") },
 ];
 
+// Add timeblock rows to HTML
 function printTimeblocks() {
   for (var i = 0; i < businessHours.length; i++) {
     var $timeblockRow = $("<tr>");
 
-    $timeblockRow.attr("class", "");
-
+    // Column for hour
     var $appointmentTime = $("<th>");
-
     $appointmentTime.text(businessHours[i].id);
-
     $appointmentTime.attr("class", "hour");
 
+    // Column for appointment text
     var $appointmentEl = $("<td>");
-
     var $appointmentText = $("<textarea>");
-
     $appointmentText.attr("id", businessHours[i].id);
-
     $appointmentText.text(getSavedAppointments(businessHours[i].id));
-
-    var $save = $("<td>");
-
-    var $saveButton = $("<button>");
-
-    $saveButton.attr("class", "saveBtn");
-
-    $saveButton.attr("id", i);
-
-    $saveButton.text("Save");
-
     $appointmentEl.append($appointmentText);
 
+    // Column for save button
+    var $save = $("<td>");
+    var $saveButton = $("<button>");
+    $saveButton.attr("class", "saveBtn");
+    $saveButton.attr("id", i);
+    $saveButton.text("Save");
     $save.append($saveButton);
-
-    $timeblockRow.append($appointmentTime, $appointmentEl, $save);
-
-    $timeBlock.append($timeblockRow);
-
     $saveButton.on("click", saveAppointment);
 
-    var businessTime = businessHours[i].time;
+    // Appending columns to row
+    $timeblockRow.append($appointmentTime, $appointmentEl, $save);
+    // Appending row to Table
+    $timeBlock.append($timeblockRow);
 
-    styleTimeBlock(businessTime, $appointmentText);
+    styleTimeblock(businessHours[i].time, $appointmentText);
   }
 }
 
 printTimeblocks();
 
+// Event handler for clicking save button
+// Saves text to local storage
 function saveAppointment(event) {
   event.preventDefault();
 
@@ -86,11 +79,13 @@ function saveAppointment(event) {
   localStorage.setItem(businessHours[buttonId].id, savedAppointment);
 }
 
+// Retrieves any previously saved appointments from local storage to display on calender
 function getSavedAppointments(key) {
   return localStorage.getItem(key);
 }
 
-function styleTimeBlock(businessTime, $appointmentText) {
+// Styles timeblocks by comparing timeblock hour to current hour
+function styleTimeblock(businessTime, $appointmentText) {
   var currentTime = moment();
 
   if (businessTime.isBefore(currentTime, "hour")) {
