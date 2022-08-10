@@ -9,7 +9,7 @@ function displayDate() {
 
 displayDate();
 
-var date = moment().format("YYYY-DD-MM");
+var date = moment().format("YYYY-MM-DD");
 
 // Business hours to list on page
 var businessHours = [
@@ -23,6 +23,10 @@ var businessHours = [
   { id: "4PM", time: moment(date + " 16") },
   { id: "5PM", time: moment(date + " 17") },
   { id: "6PM", time: moment(date + " 18") },
+  { id: "7PM", time: moment(date + " 19") },
+  { id: "8PM", time: moment(date + " 20") },
+  { id: "9PM", time: moment(date + " 21") },
+  { id: "10PM", time: moment(date + " 22") },
 ];
 
 // Add timeblock rows to HTML
